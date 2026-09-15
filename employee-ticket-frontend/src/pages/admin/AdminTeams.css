@@ -1,0 +1,1031 @@
+.admin-teams-page {
+  max-width: 1420px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+/* HEADER */
+
+.admin-teams-header {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+
+  padding: 34px 38px;
+  margin-bottom: 22px;
+
+  border-radius: 17px;
+
+  background: linear-gradient(120deg, #263957, #34486a 55%, #514b6d);
+
+  color: white;
+
+  box-shadow: 0 10px 25px rgba(32, 48, 73, 0.14);
+}
+
+.admin-teams-header::after {
+  content: "";
+
+  position: absolute;
+  width: 300px;
+  height: 300px;
+
+  right: -100px;
+  top: -180px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-teams-header > div {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-teams-eyebrow {
+  margin-bottom: 8px;
+
+  color: #d9c57e;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.admin-teams-header h1 {
+  margin: 0 0 7px;
+
+  font-size: 29px;
+  font-weight: 750;
+}
+
+.admin-teams-header p {
+  margin: 0;
+
+  color: #d5deea;
+
+  font-size: 13px;
+}
+
+.admin-teams-create-btn {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+
+  background: #e4c978;
+  color: #343023;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.admin-teams-create-btn:hover {
+  background: #ecd487;
+  transform: translateY(-1px);
+}
+
+.admin-teams-create-btn span {
+  font-size: 18px;
+}
+
+/* ERROR */
+
+.admin-teams-error {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 14px 17px;
+  margin-bottom: 20px;
+
+  border-left: 4px solid #ad4e4e;
+  border-radius: 9px;
+
+  background: #f7e8e8;
+  color: #653838;
+}
+
+.admin-teams-error-icon {
+  width: 31px;
+  height: 31px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #ad4e4e;
+  color: white;
+
+  font-weight: 800;
+}
+
+.admin-teams-error strong {
+  display: block;
+  font-size: 12px;
+}
+
+.admin-teams-error p {
+  margin: 3px 0 0;
+  font-size: 12px;
+}
+
+/* PANELS */
+
+.admin-teams-filter-panel,
+.admin-teams-form-panel,
+.admin-teams-table-panel {
+  margin-bottom: 22px;
+
+  border: 1px solid #d3dce4;
+  border-radius: 14px;
+
+  background: #edf1f4;
+
+  box-shadow: 0 6px 18px rgba(40, 54, 70, 0.055);
+}
+
+.admin-teams-panel-header,
+.admin-teams-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #d4dde5;
+}
+
+.admin-teams-panel-header span,
+.admin-teams-table-header span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #778494;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.admin-teams-panel-header h2,
+.admin-teams-table-header h2 {
+  margin: 0;
+
+  color: #293b52;
+
+  font-size: 18px;
+}
+
+/* FILTERS */
+
+.admin-teams-filter-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr auto;
+  align-items: end;
+  gap: 15px;
+
+  padding: 21px 24px;
+}
+
+.admin-teams-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #526174;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.admin-teams-field input,
+.admin-teams-field select {
+  width: 100%;
+  height: 42px;
+
+  box-sizing: border-box;
+
+  padding: 0 12px;
+
+  border: 1px solid #c5d0da;
+  border-radius: 7px;
+
+  background: #f9fafb;
+  color: #293a50;
+
+  font-size: 12px;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+.admin-teams-field input:focus,
+.admin-teams-field select:focus {
+  border-color: #61799d;
+
+  box-shadow: 0 0 0 3px rgba(97, 121, 157, 0.1);
+}
+
+.admin-teams-input-wrap {
+  position: relative;
+}
+
+.admin-teams-input-wrap span {
+  position: absolute;
+
+  left: 12px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #788697;
+
+  font-size: 17px;
+}
+
+.admin-teams-input-wrap input {
+  padding-left: 34px;
+}
+
+.admin-teams-search-btn {
+  height: 42px;
+
+  padding: 0 17px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: #465f83;
+  color: white;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+.admin-teams-search-btn:hover {
+  background: #3b5375;
+}
+
+.admin-teams-clear-btn {
+  border: 0;
+
+  background: transparent;
+  color: #566f91;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* FORM */
+
+.admin-teams-form-panel {
+  background: #e9edf1;
+}
+
+.admin-teams-close-btn {
+  width: 32px;
+  height: 32px;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: #dbe2e8;
+  color: #58697d;
+
+  font-size: 21px;
+
+  cursor: pointer;
+}
+
+.admin-teams-close-btn:hover {
+  background: #d0dae2;
+}
+
+.admin-teams-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+
+  padding: 23px 24px;
+}
+
+.admin-teams-description-field {
+  grid-column: span 2;
+}
+
+.admin-teams-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  cursor: pointer;
+
+  padding: 8px 0;
+}
+
+.admin-teams-checkbox input {
+  display: none;
+}
+
+.admin-teams-checkbox-box {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #b8c5d0;
+  border-radius: 5px;
+
+  background: #f8fafb;
+  color: transparent;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.admin-teams-checkbox input:checked + .admin-teams-checkbox-box {
+  background: #526d91;
+  border-color: #526d91;
+  color: white;
+}
+
+.admin-teams-checkbox strong {
+  display: block;
+
+  color: #3c4d61;
+
+  font-size: 12px;
+}
+
+.admin-teams-checkbox small {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #7b8794;
+
+  font-size: 10px;
+}
+
+.admin-teams-form-actions {
+  display: flex;
+  gap: 10px;
+
+  padding: 0 24px 23px;
+}
+
+.admin-teams-save-btn,
+.admin-teams-cancel-btn {
+  height: 40px;
+
+  padding: 0 18px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.admin-teams-save-btn {
+  border: 0;
+
+  background: #455e82;
+  color: white;
+}
+
+.admin-teams-save-btn:hover {
+  background: #384f70;
+}
+
+.admin-teams-cancel-btn {
+  border: 1px solid #c2ccd5;
+
+  background: #e1e7ec;
+  color: #536579;
+}
+
+/* TABLE */
+
+.admin-teams-table-panel {
+  overflow: hidden;
+
+  background: #f5f7f9;
+}
+
+.admin-teams-table-header {
+  background: #dce5ec;
+}
+
+.admin-teams-count {
+  padding: 7px 11px;
+
+  border-radius: 20px;
+
+  background: #edf2f5;
+  color: #657486;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.admin-teams-table-scroll {
+  overflow-x: auto;
+}
+
+.admin-teams-table {
+  width: 100%;
+  min-width: 900px;
+
+  border-collapse: collapse;
+}
+
+.admin-teams-table th {
+  padding: 13px 18px;
+
+  background: #e7edf1;
+
+  border-bottom: 1px solid #d4dde5;
+
+  color: #687788;
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+
+  text-align: left;
+}
+
+.admin-teams-table td {
+  padding: 15px 18px;
+
+  border-bottom: 1px solid #e0e6eb;
+
+  color: #526174;
+
+  font-size: 12px;
+
+  vertical-align: middle;
+}
+
+.admin-teams-table tbody tr {
+  background: #f7f9fa;
+
+  transition: 0.15s;
+}
+
+.admin-teams-table tbody tr:hover {
+  background: #eef3f6;
+}
+
+.admin-teams-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-teams-id {
+  color: #7a8796;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.admin-teams-name {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.admin-teams-team-icon {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: #e4e5ef;
+  color: #5d6383;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.admin-teams-name strong {
+  display: block;
+
+  color: #33465d;
+
+  font-size: 12px;
+}
+
+.admin-teams-name small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #8a95a1;
+
+  font-size: 10px;
+}
+
+.admin-teams-department {
+  color: #566b84;
+  font-weight: 650;
+}
+
+.admin-teams-description {
+  display: block;
+
+  max-width: 230px;
+
+  overflow: hidden;
+
+  color: #7b8794;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* STATUS */
+
+.admin-teams-active,
+.admin-teams-inactive {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.admin-teams-active {
+  color: #39705a;
+}
+
+.admin-teams-inactive {
+  color: #788492;
+}
+
+.admin-teams-active i,
+.admin-teams-inactive i {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+}
+
+.admin-teams-active i {
+  background: #4c9973;
+}
+
+.admin-teams-inactive i {
+  background: #9aa4ae;
+}
+
+/* ACTIONS */
+
+.admin-teams-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.admin-teams-edit-btn,
+.admin-teams-deactivate-btn,
+.admin-teams-activate-btn {
+  padding: 7px 10px;
+
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.admin-teams-edit-btn {
+  border: 1px solid #c1cdd7;
+
+  background: #e9eef2;
+  color: #506783;
+}
+
+.admin-teams-edit-btn:hover {
+  background: #dfe7ed;
+}
+
+.admin-teams-deactivate-btn {
+  border: 1px solid #dfbcbc;
+
+  background: #f3e2e2;
+  color: #914848;
+}
+
+.admin-teams-deactivate-btn:hover {
+  background: #ecd5d5;
+}
+
+.admin-teams-activate-btn {
+  border: 1px solid #bcd4c7;
+
+  background: #e2eee7;
+  color: #39705a;
+}
+
+.admin-teams-activate-btn:hover {
+  background: #d6e8df;
+}
+
+/* LOADING */
+
+.admin-teams-loading {
+  min-height: 280px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  color: #758292;
+}
+
+.admin-teams-spinner {
+  width: 31px;
+  height: 31px;
+
+  margin-bottom: 7px;
+
+  border: 3px solid #d6dfe6;
+  border-top-color: #536f94;
+
+  border-radius: 50%;
+
+  animation: admin-teams-spin 0.8s linear infinite;
+}
+
+@keyframes admin-teams-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.admin-teams-loading strong {
+  color: #43556b;
+  font-size: 12px;
+}
+
+.admin-teams-loading span {
+  font-size: 10px;
+}
+
+/* EMPTY */
+
+.admin-teams-empty {
+  min-height: 280px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.admin-teams-empty-icon {
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 13px;
+
+  border-radius: 14px;
+
+  background: #e3e9ee;
+  color: #667c96;
+
+  font-size: 25px;
+}
+
+.admin-teams-empty h3 {
+  margin: 0 0 5px;
+
+  color: #405269;
+
+  font-size: 15px;
+}
+
+.admin-teams-empty p {
+  margin: 0 0 15px;
+
+  color: #818c99;
+
+  font-size: 11px;
+}
+
+.admin-teams-empty-btn {
+  padding: 9px 14px;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: #526e94;
+  color: white;
+
+  font-size: 10px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+/* PAGINATION */
+
+.admin-teams-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 17px;
+}
+
+.admin-teams-pagination > button {
+  min-width: 105px;
+
+  padding: 10px 14px;
+
+  border: 1px solid #c6d0d9;
+  border-radius: 7px;
+
+  background: #e8edf1;
+  color: #536a86;
+
+  font-size: 10px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.admin-teams-pagination > button:hover:not(:disabled) {
+  background: #dce5eb;
+}
+
+.admin-teams-pagination > button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-teams-page-number {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #7d8997;
+
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.7px;
+}
+
+.admin-teams-page-number strong {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+
+  background: #dfe7ed;
+  color: #415a7d;
+
+  font-size: 11px;
+
+  letter-spacing: 0;
+}
+
+/* MODAL */
+
+.admin-teams-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(30, 42, 58, 0.55);
+
+  backdrop-filter: blur(3px);
+}
+
+.admin-teams-modal {
+  width: 100%;
+  max-width: 410px;
+
+  padding: 30px;
+
+  border: 1px solid #d6dfe6;
+  border-radius: 15px;
+
+  background: #f4f7f9;
+
+  box-shadow: 0 20px 50px rgba(20, 32, 48, 0.25);
+
+  text-align: center;
+}
+
+.admin-teams-modal-icon {
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 15px;
+
+  border-radius: 50%;
+
+  background: #eee7d8;
+  color: #7c6836;
+
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.admin-teams-modal h2 {
+  margin: 0 0 8px;
+
+  color: #304259;
+
+  font-size: 18px;
+}
+
+.admin-teams-modal p {
+  margin: 0;
+
+  color: #718091;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.admin-teams-modal p strong {
+  color: #3e526b;
+}
+
+.admin-teams-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+
+  margin-top: 24px;
+}
+
+.admin-teams-modal-cancel,
+.admin-teams-modal-danger,
+.admin-teams-modal-confirm {
+  min-width: 105px;
+
+  padding: 10px 15px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.admin-teams-modal-cancel {
+  border: 1px solid #c5d0d9;
+
+  background: #e6ebef;
+  color: #536579;
+}
+
+.admin-teams-modal-danger {
+  border: 0;
+
+  background: #a74d4d;
+  color: white;
+}
+
+.admin-teams-modal-confirm {
+  border: 0;
+
+  background: #4e8068;
+  color: white;
+}
+
+.admin-teams-modal-danger:hover {
+  background: #934141;
+}
+
+.admin-teams-modal-confirm:hover {
+  background: #416f59;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+  .admin-teams-filter-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .admin-teams-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    padding: 27px;
+  }
+
+  .admin-teams-create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-teams-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-teams-description-field {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-teams-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-teams-panel-header,
+  .admin-teams-table-header {
+    padding: 18px;
+  }
+
+  .admin-teams-filter-grid {
+    padding: 18px;
+  }
+
+  .admin-teams-form-grid {
+    padding: 18px;
+  }
+
+  .admin-teams-form-actions {
+    padding: 0 18px 18px;
+  }
+
+  .admin-teams-actions {
+    flex-direction: column;
+  }
+
+  .admin-teams-pagination > button {
+    min-width: 85px;
+  }
+}
