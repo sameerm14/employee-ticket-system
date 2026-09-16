@@ -3,10 +3,18 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.core.config import settings
 
+connect_args = {}
+
+if settings.DATABASE_URL.startswith("mysql+pymysql://"):
+    connect_args = {
+        "ssl": {}
+    }
+
 
 engine = create_engine(
     settings.DATABASE_URL,
-    echo=True
+    echo=True,
+    connect_args=connect_args
 )
 
 SessionLocal = sessionmaker(
