@@ -9,6 +9,8 @@ function EmployeeTicketDetail() {
   const navigate = useNavigate();
 
   const [ticket, setTicket] = useState(null);
+  const [departmentName, setDepartmentName] = useState("");
+  const [projectName, setProjectName] = useState("");
   const [comments, setComments] = useState([]);
   const [attachments, setAttachments] = useState([]);
   const [statusHistory, setStatusHistory] = useState([]);
@@ -36,7 +38,48 @@ function EmployeeTicketDetail() {
 
   const fetchTicket = async () => {
     const response = await api.get(`/api/tickets/${id}`);
-    setTicket(response.data);
+
+    const ticketData = response.data;
+
+    setTicket(ticketData);
+
+    // Fetch department name
+    if (ticketData.department_id) {
+      const departmentResponse = await api.get("/api/departments");
+
+      const departments =
+        departmentResponse.data?.departments ||
+        departmentResponse.data?.items ||
+        departmentResponse.data ||
+        [];
+
+      const department = departments.find(
+        (item) => item.id === ticketData.department_id,
+      );
+
+      setDepartmentName(department?.name || "Unknown Department");
+    } else {
+      setDepartmentName("Not assigned");
+    }
+
+    // Fetch project name
+    if (ticketData.project_id) {
+      const projectResponse = await api.get("/api/projects");
+
+      const projects =
+        projectResponse.data?.projects ||
+        projectResponse.data?.items ||
+        projectResponse.data ||
+        [];
+
+      const project = projects.find(
+        (item) => item.id === ticketData.project_id,
+      );
+
+      setProjectName(project?.name || "Unknown Project");
+    } else {
+      setProjectName("Not assigned");
+    }
   };
 
   // =========================
@@ -526,12 +569,12 @@ function EmployeeTicketDetail() {
 
                 <div className="employee-ticket-info-item">
                   <span>Department</span>
-                  <strong>{ticket.department_id}</strong>
+                  <strong>{departmentName || "Loading..."}</strong>
                 </div>
 
                 <div className="employee-ticket-info-item">
                   <span>Project</span>
-                  <strong>{ticket.project_id || "Not assigned"}</strong>
+                  <strong>{projectName || "Not assigned"}</strong>
                 </div>
 
                 <div className="employee-ticket-info-item">

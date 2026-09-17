@@ -9,36 +9,41 @@ export function AuthProvider({ children }) {
 
   // Restore user after page refresh
   useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
+    const restoreUser = async () => {
+      const accessToken = localStorage.getItem("access_token");
 
-    if (!accessToken) {
-      setLoading(false);
-      return;
-    }
+      if (!accessToken) {
+        setLoading(false);
+        return;
+      }
 
-    try {
-      const payload = JSON.parse(atob(accessToken.split(".")[1]));
+      try {
+        const payload = JSON.parse(atob(accessToken.split(".")[1]));
 
-      // Check token expiration
-      if (payload.exp && payload.exp * 1000 < Date.now()) {
+        // Check token expiration
+        if (payload.exp && payload.exp * 1000 < Date.now()) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          setUser(null);
+          return;
+        }
+
+        // Get complete user information from backend
+        const response = await api.get("/api/auth/me");
+
+        setUser(response.data);
+      } catch (error) {
+        console.error("Unable to restore user:", error);
+
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         setUser(null);
-      } else {
-        setUser({
-          id: Number(payload.sub),
-          role: payload.role,
-        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Invalid access token");
+    };
 
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
+    restoreUser();
   }, []);
 
   const login = async (email, password) => {
@@ -55,13 +60,10 @@ export function AuthProvider({ children }) {
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
 
-      // Decode JWT payload
-      const payload = JSON.parse(atob(access_token.split(".")[1]));
+      // Get complete user information
+      const userResponse = await api.get("/api/auth/me");
 
-      setUser({
-        id: Number(payload.sub),
-        role: payload.role,
-      });
+      setUser(userResponse.data);
 
       return response.data;
     } finally {

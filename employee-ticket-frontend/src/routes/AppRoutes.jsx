@@ -23,6 +23,8 @@ import AdminTickets from "../pages/admin/AdminTickets";
 import AdminTicketDetail from "../pages/admin/AdminTicketDetail";
 import AdminNotifications from "../pages/admin/AdminNotifications";
 
+import Profile from "../pages/Profile";
+
 function AppRoutes() {
   return (
     <Routes>
@@ -39,6 +41,7 @@ function AppRoutes() {
       <Route path="/admin/tickets" element={<AdminTickets />} />
       <Route path="/admin/tickets/:id" element={<AdminTicketDetail />} />
       <Route path="/admin/notifications" element={<AdminNotifications />} />
+      <Route path="/admin/profile" element={<Profile />} />
 
       {/* Team Lead */}
       <Route path="/team-lead/dashboard" element={<TeamLeadDashboard />} />
@@ -49,6 +52,7 @@ function AppRoutes() {
         path="/team-lead/notifications"
         element={<TeamLeadNotifications />}
       />
+      <Route path="/team-lead/profile" element={<Profile />} />
 
       {/* Employee */}
       <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
@@ -63,6 +67,7 @@ function AppRoutes() {
         path="/employee/notifications"
         element={<EmployeeNotifications />}
       />
+      <Route path="/employee/profile" element={<Profile />} />
 
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

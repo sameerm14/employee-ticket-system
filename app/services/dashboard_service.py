@@ -85,9 +85,22 @@ def get_employee_dashboard(
     # Department information
     # ---------------------------------
 
+    # ---------------------------------
+# Department information
+# ---------------------------------
+
+    department_name = None
     department_tickets = 0
 
     if current_user.department_id is not None:
+
+        department = db.query(Department).filter(
+            Department.id == current_user.department_id
+        ).first()
+
+        if department:
+            department_name = department.name
+
         department_tickets = db.query(Ticket).filter(
             Ticket.department_id == current_user.department_id
         ).count()
@@ -126,6 +139,7 @@ def get_employee_dashboard(
 
         "department_summary": {
             "department_id": current_user.department_id,
+            "department_name": department_name,
             "total_department_tickets": department_tickets
         }
     }

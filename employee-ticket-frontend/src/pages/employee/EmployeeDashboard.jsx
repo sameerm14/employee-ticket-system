@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout";
 import api from "../../services/api";
 import "./EmployeeDashboard.css";
+import { useAuth } from "../../context/AuthContext";
 
 function EmployeeDashboard() {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const { user } = useAuth();
 
   const navigate = useNavigate();
 
@@ -87,7 +90,8 @@ function EmployeeDashboard() {
             <h1>Employee Dashboard</h1>
 
             <p>
-              Track your support requests and stay updated on ticket progress.
+              Welcome back, {user?.full_name}. Here's an overview of your ticket
+              activity.
             </p>
           </div>
 

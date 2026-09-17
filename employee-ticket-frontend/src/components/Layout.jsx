@@ -69,6 +69,12 @@ function Layout({ children }) {
               <NavLink to="/employee/notifications" className={navClass}>
                 <span className="sidebar-link-icon">♢</span>
                 <span className="sidebar-link-text">Notifications</span>
+                <span className="sidebar-link-text">My Profile</span>
+              </NavLink>
+
+              <NavLink to="/employee/profile" className={navClass}>
+                <span className="sidebar-link-icon">◎</span>
+                <span className="sidebar-link-text">My Profile</span>
               </NavLink>
             </>
           )}
@@ -98,6 +104,11 @@ function Layout({ children }) {
               <NavLink to="/team-lead/notifications" className={navClass}>
                 <span className="sidebar-link-icon">♢</span>
                 <span className="sidebar-link-text">Notifications</span>
+              </NavLink>
+
+              <NavLink to="/team-lead/profile" className={navClass}>
+                <span className="sidebar-link-icon">◎</span>
+                <span className="sidebar-link-text">My Profile</span>
               </NavLink>
             </>
           )}
@@ -142,6 +153,11 @@ function Layout({ children }) {
               <NavLink to="/admin/notifications" className={navClass}>
                 <span className="sidebar-link-icon">♢</span>
                 <span className="sidebar-link-text">Notifications</span>
+              </NavLink>
+
+              <NavLink to="/admin/profile" className={navClass}>
+                <span className="sidebar-link-icon">◎</span>
+                <span className="sidebar-link-text">My Profile</span>
               </NavLink>
             </>
           )}

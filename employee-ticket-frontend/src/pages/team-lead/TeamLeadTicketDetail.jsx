@@ -9,12 +9,21 @@ function TeamLeadTicketDetail() {
   const navigate = useNavigate();
 
   const [ticket, setTicket] = useState(null);
+
+  const [departmentName, setDepartmentName] = useState("");
+  const [projectName, setProjectName] = useState("");
+
   const [comments, setComments] = useState([]);
   const [attachments, setAttachments] = useState([]);
   const [history, setHistory] = useState([]);
 
   const [users, setUsers] = useState([]);
   const [teams, setTeams] = useState([]);
+
+  const [assignedUserName, setAssignedUserName] = useState("");
+  const [assignedTeamName, setAssignedTeamName] = useState("");
+
+  const [userNames, setUserNames] = useState({});
 
   const [selectedUserId, setSelectedUserId] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState("");
@@ -58,38 +67,152 @@ function TeamLeadTicketDetail() {
       setLoading(true);
       setError("");
 
+      // First get the main ticket data
+      const ticketResponse = await api.get(`/api/tickets/${id}`);
+
+      const ticketData = ticketResponse.data;
+
+      setTicket(ticketData);
+
+      // Fetch all other ticket-related data
       const [
-        ticketResponse,
         commentsResponse,
         attachmentsResponse,
         historyResponse,
         workloadResponse,
+        departmentsResponse,
+        projectsResponse,
+        teamsResponse,
       ] = await Promise.all([
-        api.get(`/api/tickets/${id}`),
         api.get(`/api/comments/tickets/${id}`),
         api.get(`/api/attachments/tickets/${id}`),
         api.get(`/api/workflow/tickets/${id}/history`),
         api.get("/api/assignments/team-lead/workload"),
+        api.get("/api/departments"),
+        api.get("/api/projects"),
+        api.get("/api/teams"),
       ]);
 
-      setTicket(ticketResponse.data);
       setComments(commentsResponse.data);
       setAttachments(attachmentsResponse.data);
       setHistory(historyResponse.data);
 
-      setUsers(
-        workloadResponse.data.members.map((member) => ({
-          id: member.user_id,
-          full_name: member.user_name,
-        })),
+      // --------------------------------------------------
+      // DEPARTMENT NAME
+      // --------------------------------------------------
+
+      const departments =
+        departmentsResponse.data?.departments ||
+        departmentsResponse.data?.items ||
+        departmentsResponse.data ||
+        [];
+
+      const department = departments.find(
+        (item) => item.id === ticketData.department_id,
       );
 
-      setTeams([
-        {
-          id: workloadResponse.data.team_id,
-          name: `Team #${workloadResponse.data.team_id}`,
-        },
-      ]);
+      if (department) {
+        setDepartmentName(department.name);
+      } else {
+        setDepartmentName("Unknown Department");
+      }
+
+      // --------------------------------------------------
+      // PROJECT NAME
+      // --------------------------------------------------
+
+      const projects =
+        projectsResponse.data?.projects ||
+        projectsResponse.data?.items ||
+        projectsResponse.data ||
+        [];
+
+      if (ticketData.project_id) {
+        const project = projects.find(
+          (item) => item.id === ticketData.project_id,
+        );
+
+        if (project) {
+          setProjectName(project.name);
+        } else {
+          setProjectName("Unknown Project");
+        }
+      } else {
+        setProjectName("Not assigned");
+      }
+
+      // --------------------------------------------------
+      // TEAM LEAD WORKLOAD / USERS
+      // --------------------------------------------------
+
+      const members = workloadResponse.data?.members || [];
+
+      const teamMembers = members.map((member) => ({
+        id: member.user_id,
+        full_name: member.user_name,
+      }));
+
+      setUsers(teamMembers);
+
+      // --------------------------------------------------
+      // USER NAME LOOKUP
+      // --------------------------------------------------
+
+      const names = {};
+
+      teamMembers.forEach((member) => {
+        names[member.id] = member.full_name;
+      });
+
+      setUserNames(names);
+
+      // --------------------------------------------------
+      // ASSIGNED USER NAME
+      // --------------------------------------------------
+
+      if (ticketData.assigned_user_id) {
+        const assignedUser = teamMembers.find(
+          (user) => user.id === ticketData.assigned_user_id,
+        );
+
+        if (assignedUser) {
+          setAssignedUserName(assignedUser.full_name);
+        } else {
+          setAssignedUserName("Unknown User");
+        }
+      } else {
+        setAssignedUserName("Not assigned");
+      }
+
+      // --------------------------------------------------
+      // TEAMS
+      // --------------------------------------------------
+
+      const teamList =
+        teamsResponse.data?.teams ||
+        teamsResponse.data?.items ||
+        teamsResponse.data ||
+        [];
+
+      setTeams(teamList);
+
+      // --------------------------------------------------
+      // ASSIGNED TEAM NAME
+      // --------------------------------------------------
+
+      if (ticketData.assigned_team_id) {
+        const assignedTeam = teamList.find(
+          (team) => team.id === ticketData.assigned_team_id,
+        );
+
+        if (assignedTeam) {
+          setAssignedTeamName(assignedTeam.name);
+        } else {
+          setAssignedTeamName("Unknown Team");
+        }
+      } else {
+        setAssignedTeamName("Not assigned");
+      }
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to load ticket.");
     } finally {
@@ -156,6 +279,7 @@ function TeamLeadTicketDetail() {
       setError("");
 
       const formData = new FormData();
+
       formData.append("file", selectedFile);
 
       await api.post(`/api/attachments/tickets/${id}`, formData, {
@@ -196,11 +320,15 @@ function TeamLeadTicketDetail() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
 
       const link = document.createElement("a");
+
       link.href = url;
+
       link.setAttribute("download", attachment.original_filename);
 
       document.body.appendChild(link);
+
       link.click();
+
       link.remove();
 
       window.URL.revokeObjectURL(url);
@@ -343,7 +471,9 @@ function TeamLeadTicketDetail() {
       <Layout>
         <div className="team-lead-ticket-state">
           <div className="team-lead-ticket-spinner"></div>
+
           <h3>Loading ticket</h3>
+
           <p>Fetching ticket details and activity...</p>
         </div>
       </Layout>
@@ -412,6 +542,7 @@ function TeamLeadTicketDetail() {
     <Layout>
       <div className="team-lead-ticket-detail">
         {/* Header */}
+
         <div className="team-lead-ticket-header">
           <div className="team-lead-ticket-header-left">
             <button
@@ -453,6 +584,7 @@ function TeamLeadTicketDetail() {
 
             <div>
               <strong>Action could not be completed</strong>
+
               <p>{error}</p>
             </div>
 
@@ -461,6 +593,7 @@ function TeamLeadTicketDetail() {
         )}
 
         {/* Main ticket overview */}
+
         <div className="team-lead-ticket-overview-grid">
           <section className="team-lead-ticket-panel team-lead-ticket-main-panel">
             <div className="team-lead-ticket-panel-header">
@@ -478,30 +611,31 @@ function TeamLeadTicketDetail() {
             <div className="team-lead-ticket-info-grid">
               <div className="team-lead-ticket-info-item">
                 <span>Ticket Number</span>
+
                 <strong>{ticket.ticket_number}</strong>
               </div>
 
               <div className="team-lead-ticket-info-item">
                 <span>Department</span>
-                <strong>Department #{ticket.department_id}</strong>
+
+                <strong>{departmentName || "Loading..."}</strong>
               </div>
 
               <div className="team-lead-ticket-info-item">
                 <span>Project</span>
-                <strong>
-                  {ticket.project_id
-                    ? `Project #${ticket.project_id}`
-                    : "Not assigned"}
-                </strong>
+
+                <strong>{projectName || "Not assigned"}</strong>
               </div>
 
               <div className="team-lead-ticket-info-item">
                 <span>Created</span>
+
                 <strong>{new Date(ticket.created_at).toLocaleString()}</strong>
               </div>
 
               <div className="team-lead-ticket-info-item">
                 <span>Last Updated</span>
+
                 <strong>{new Date(ticket.updated_at).toLocaleString()}</strong>
               </div>
 
@@ -524,6 +658,7 @@ function TeamLeadTicketDetail() {
           </section>
 
           {/* Current assignment summary */}
+
           <section className="team-lead-ticket-panel team-lead-ticket-assignment-summary">
             <div className="team-lead-ticket-panel-header">
               <div>
@@ -538,17 +673,15 @@ function TeamLeadTicketDetail() {
             <div className="team-lead-current-assignment">
               <div className="team-lead-current-assignment-block user">
                 <div className="team-lead-assignment-avatar">
-                  {ticket.assigned_user_id ? "U" : "—"}
+                  {ticket.assigned_user_id
+                    ? assignedUserName?.charAt(0)?.toUpperCase()
+                    : "—"}
                 </div>
 
                 <div>
                   <span>Assigned User</span>
 
-                  <strong>
-                    {ticket.assigned_user_id
-                      ? `User #${ticket.assigned_user_id}`
-                      : "Not assigned"}
-                  </strong>
+                  <strong>{assignedUserName || "Loading..."}</strong>
                 </div>
               </div>
 
@@ -556,17 +689,15 @@ function TeamLeadTicketDetail() {
 
               <div className="team-lead-current-assignment-block team">
                 <div className="team-lead-assignment-avatar">
-                  {ticket.assigned_team_id ? "T" : "—"}
+                  {ticket.assigned_team_id
+                    ? assignedTeamName?.charAt(0)?.toUpperCase()
+                    : "—"}
                 </div>
 
                 <div>
                   <span>Assigned Team</span>
 
-                  <strong>
-                    {ticket.assigned_team_id
-                      ? `Team #${ticket.assigned_team_id}`
-                      : "Not assigned"}
-                  </strong>
+                  <strong>{assignedTeamName || "Loading..."}</strong>
                 </div>
               </div>
             </div>
@@ -584,8 +715,10 @@ function TeamLeadTicketDetail() {
         </div>
 
         {/* Management controls */}
+
         <div className="team-lead-ticket-management-grid">
           {/* Status */}
+
           <section className="team-lead-ticket-panel">
             <div className="team-lead-ticket-panel-header">
               <div>
@@ -600,8 +733,10 @@ function TeamLeadTicketDetail() {
             {transitions.length === 0 ? (
               <div className="team-lead-ticket-no-action">
                 <span>✓</span>
+
                 <div>
                   <strong>No status changes available</strong>
+
                   <p>
                     This ticket currently has no valid workflow transitions.
                   </p>
@@ -651,6 +786,7 @@ function TeamLeadTicketDetail() {
           </section>
 
           {/* Assignment controls */}
+
           <section className="team-lead-ticket-panel">
             <div className="team-lead-ticket-panel-header">
               <div>
@@ -676,7 +812,7 @@ function TeamLeadTicketDetail() {
 
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
-                    {user.full_name} (User #{user.id})
+                    {user.full_name}
                   </option>
                 ))}
               </select>
@@ -706,7 +842,7 @@ function TeamLeadTicketDetail() {
 
                 {teams.map((team) => (
                   <option key={team.id} value={team.id}>
-                    {team.name} (Team #{team.id})
+                    {team.name}
                   </option>
                 ))}
               </select>
@@ -733,8 +869,10 @@ function TeamLeadTicketDetail() {
         </div>
 
         {/* Comments + Attachments */}
+
         <div className="team-lead-ticket-content-grid">
           {/* Comments */}
+
           <section className="team-lead-ticket-panel">
             <div className="team-lead-ticket-panel-header">
               <div>
@@ -779,17 +917,23 @@ function TeamLeadTicketDetail() {
               {comments.length === 0 ? (
                 <div className="team-lead-ticket-empty-inline">
                   <span>💬</span>
+
                   <strong>No comments yet</strong>
+
                   <p>Be the first to add an update to this ticket.</p>
                 </div>
               ) : (
                 comments.map((item) => (
                   <div className="team-lead-comment-item" key={item.id}>
-                    <div className="team-lead-comment-avatar">U</div>
+                    <div className="team-lead-comment-avatar">
+                      {userNames[item.user_id]?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
 
                     <div className="team-lead-comment-body">
                       <div className="team-lead-comment-header">
-                        <strong>User #{item.user_id}</strong>
+                        <strong>
+                          {userNames[item.user_id] || "Unknown User"}
+                        </strong>
 
                         <span>
                           {new Date(item.created_at).toLocaleString()}
@@ -805,6 +949,7 @@ function TeamLeadTicketDetail() {
           </section>
 
           {/* Attachments */}
+
           <section className="team-lead-ticket-panel">
             <div className="team-lead-ticket-panel-header">
               <div>
@@ -845,7 +990,9 @@ function TeamLeadTicketDetail() {
               {attachments.length === 0 ? (
                 <div className="team-lead-ticket-empty-inline">
                   <span>📎</span>
+
                   <strong>No attachments</strong>
+
                   <p>Files uploaded for this ticket will appear here.</p>
                 </div>
               ) : (
@@ -885,6 +1032,7 @@ function TeamLeadTicketDetail() {
         </div>
 
         {/* Status history */}
+
         <section className="team-lead-ticket-panel team-lead-history-panel">
           <div className="team-lead-ticket-panel-header">
             <div>
@@ -901,7 +1049,9 @@ function TeamLeadTicketDetail() {
           {history.length === 0 ? (
             <div className="team-lead-ticket-empty-inline">
               <span>↻</span>
+
               <strong>No status history</strong>
+
               <p>Status changes will appear here as the ticket progresses.</p>
             </div>
           ) : (
@@ -934,7 +1084,7 @@ function TeamLeadTicketDetail() {
                         Changed by{" "}
                         <strong>
                           {item.changed_by
-                            ? `User #${item.changed_by}`
+                            ? userNames[item.changed_by] || "Unknown User"
                             : "System"}
                         </strong>
                       </span>
@@ -954,6 +1104,7 @@ function TeamLeadTicketDetail() {
       </div>
 
       {/* Confirmation Modal */}
+
       {confirmation.open && (
         <div className="team-lead-confirm-overlay" onClick={closeConfirmation}>
           <div

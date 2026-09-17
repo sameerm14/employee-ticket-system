@@ -6,6 +6,8 @@ import "./TeamLeadDashboard.css";
 
 function TeamLeadDashboard() {
   const [dashboard, setDashboard] = useState(null);
+  const [departmentName, setDepartmentName] = useState("");
+  const [teamName, setTeamName] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -21,7 +23,48 @@ function TeamLeadDashboard() {
       setError("");
 
       const response = await api.get("/api/dashboard/team-lead");
-      setDashboard(response.data);
+
+      const dashboardData = response.data;
+
+      setDashboard(dashboardData);
+
+      // Fetch department name
+      if (dashboardData.team_lead?.department_id) {
+        const departmentResponse = await api.get("/api/departments");
+
+        const departments =
+          departmentResponse.data?.departments ||
+          departmentResponse.data?.items ||
+          departmentResponse.data ||
+          [];
+
+        const department = departments.find(
+          (item) => item.id === dashboardData.team_lead.department_id,
+        );
+
+        setDepartmentName(department?.name || "Unknown Department");
+      } else {
+        setDepartmentName("Not assigned");
+      }
+
+      // Fetch team name
+      if (dashboardData.team_lead?.team_id) {
+        const teamResponse = await api.get("/api/teams");
+
+        const teams =
+          teamResponse.data?.teams ||
+          teamResponse.data?.items ||
+          teamResponse.data ||
+          [];
+
+        const team = teams.find(
+          (item) => item.id === dashboardData.team_lead.team_id,
+        );
+
+        setTeamName(team?.name || "Unknown Team");
+      } else {
+        setTeamName("Not assigned");
+      }
     } catch (err) {
       setError(
         err.response?.data?.detail || "Failed to load Team Lead dashboard.",
@@ -316,13 +359,13 @@ function TeamLeadDashboard() {
             </div>
 
             <div className="team-lead-profile-item">
-              <span>Department ID</span>
-              <strong>{dashboard.team_lead.department_id}</strong>
+              <span>Department</span>
+              <strong>{departmentName || "Loading..."}</strong>
             </div>
 
             <div className="team-lead-profile-item">
-              <span>Team ID</span>
-              <strong>{dashboard.team_lead.team_id}</strong>
+              <span>Team</span>
+              <strong>{teamName || "Loading..."}</strong>
             </div>
           </div>
         </div>
